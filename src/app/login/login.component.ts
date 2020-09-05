@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+ 
 
 @Component({
   selector: 'app-login',
@@ -20,15 +21,15 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  acnoChange(event){
-    this.acno=event.target.value;
+  // acnoChange(event){
+  //   this.acno=event.target.value;
 
-  }
+  // }
 
-  pwdChange(event){
-    this.pwd=event.target.value;
+  // pwdChange(event){
+  //   this.pwd=event.target.value;
 
-  }
+  // }
 login(){
   
   var acno=parseInt(this.acno);
@@ -60,3 +61,4 @@ login(){
     }
 }
 
+ 
