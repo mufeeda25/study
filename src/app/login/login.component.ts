@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import {DataService} from '../services/data.service';
+import { FormBuilder, Validators } from '@angular/forms';
 
  
 
@@ -11,15 +12,20 @@ import {DataService} from '../services/data.service';
 })
 export class LoginComponent implements OnInit {
  
-  acno="";
-  pwd="";
+  //acno="";
+  //pwd="";
+  loginForm=this.fb.group({
+    acno:['',[Validators.required,Validators.minLength(3),Validators.pattern("^[0-9]*$")]],
+    pwd:['',[Validators.required]],
+  });
   constructor(private router:Router,
-    private dataService : DataService) { }
+    private dataService : DataService,
+    private fb : FormBuilder) { }
 
   ngOnInit(): void {
   }
   // acnoChange(event){
-  //   this.acno=event.target.value;
+  //   this.acno=event.target.value;event binding method
 
   // }
 
@@ -27,36 +33,33 @@ export class LoginComponent implements OnInit {
   //   this.pwd=event.target.value;
 
   // }
+  getError(field){
+    return (this.loginForm.get(field).touched||this.loginForm.get(field).dirty)&& this.loginForm.get(field).errors;
+      }
 login(){
   
-  var acno=parseInt(this.acno);
-        var password=this.pwd;
-        alert(acno+","+password)
-        try {
-            if(isNaN(acno)) throw "Invalid Account Number"
-            if(acno.toString().length<2) throw "Account number must be atleast 4 characters"
-        } catch (error) {
-            alert(error)
-        }
+if(this.loginForm.valid){
+  const result=this.dataService.login(this.loginForm.value.acno,this.loginForm.value.pwd);
+  if(result){
+    alert('Login Successful');
+    
+    this.router.navigateByUrl("dashboard");
 
-        var data=this.dataService.accountDetails;
-        
-        if (acno in data){
-            var pwd = data[acno].password
-            if (pwd==password){
-                alert('Login Successful')
-                //window.location.href="userhome.html"
-                this.router.navigateByUrl("dashboard");
-            }
-            else{
-                alert('Incorrect password')
-            }
-        }
-        else{
-            alert("Account No does not exists")
-        }
-
-    }
+  }
+  else{
+    alert("invalid user");
+  }
 }
+ else{
+alert("form is invalid");
+ }       
+      
+}
+}              
+            
+            
+        
+       
+
 
  

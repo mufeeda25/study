@@ -7,26 +7,27 @@
         </div>
         <div class="row">
             <div class="col">
-                <form (ngSubmit)="register()">
-                    {{ acno }}
-                    {{ name }}
-                    {{ pwd }}
+                <form [formGroup]="registerForm" (ngSubmit)="register()">
                     <div class="form-group">
                     <label for="acno">Account Number</label>
-                    <input  [(ngModel)]="acno" name="acno" type="text" class="form-control" id="acno" aria-describedby="emailHelp">
+                    <input  formControlName="acno" name="acno" type="text" class="form-control" id="acno" aria-describedby="emailHelp">
                     <small id="emailHelp" class="form-text text-muted">We'll never share your Account number with anyone else.</small>
-                    </div>
+                    <div class="error" *ngIf="getError('acno')">Name is invalid</div>
+                </div>
                     <div class="form-group">
                     <label for="nms">Name</label>
-                    <input [(ngModel)]="name" name="names" type="text" class="form-control" id="nms ">
+                    <input formControlName="name" name="names" type="text" class="form-control" id="nms ">
+                    <div class="error" *ngIf="getError('name')">Name is invalid</div>
                     </div>
                     <div class="form-group">
                         <label for="pwd">Password</label>
-                        <input [(ngModel)]="pwd" name="pwd" type="password" class="form-control" id="pwd ">
-                        </div>
+                        <input formControlName="pwd" name="pwd" type="password" class="form-control" id="pwd ">
+                        <div class="error" *ngIf="getError('pwd')">Name is invalid</div>
+                    </div>
                         <div class="form-group">
                             <label for="pin">Pin</label>
-                            <input [(ngModel)]="pin" name="pin" type="password" class="form-control" id="pin">
+                            <input formControlName="pin" name="pin" type="password" class="form-control" id="pin">
+                             <div class="error" *ngIf="getError('pin')">Name is invalid</div>
                             </div>
                     <button type="submit" class="btn btn-primary" >Submit</button>
                     <a routerLink="">back to login</a>
