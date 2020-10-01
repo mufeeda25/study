@@ -18,39 +18,42 @@ acnow:['',[Validators.required]],
 pinw:['',[Validators.required]],
 amtw:['',[Validators.required]],
   });
+  name="";
     constructor(
       public  dataService : DataService,
-      private fb : FormBuilder) { }
+      private fb : FormBuilder) {this.name=localStorage.getItem("name") }
   
   ngOnInit(): void {
   }
    deposit(){
 if(this.depositForm.valid){
-  const result=this.dataService.deposit(this.depositForm.value.acnod,this.depositForm.value.pind,this.depositForm.value.amtd);
-  if(result.status){
-    alert(result.message);
-    alert(result.balance);
-  }
-  else{
-    alert(result.message);
+  this.dataService.deposit(this.depositForm.value.acnod,this.depositForm.value.pind,this.depositForm.value.amtd) 
+   .subscribe((result:any)=>{
 
-  }
+  alert(result.message);
+  alert(result.balance);
 
-}
+  },(result)=>{
+alert(result.error.message);
+
+  })
+    
+  }
+  
 else{
   alert("invalid form");
 }
 }
 withdraw(){
   if(this.withdrawForm.valid){
-    const result=this.dataService.withdraw(this.withdrawForm.value.acnow,this.withdrawForm.value.pinw,this.withdrawForm.value.amtw);
-   if(result.status){
-     alert(result.message);
-     alert(result.balance);
-   }
-   else{
-     alert(result.message);
-   }
+    this.dataService.withdraw(this.withdrawForm.value.acnow,this.withdrawForm.value.pinw,this.withdrawForm.value.amtw)
+    .subscribe((result:any)=>{
+      alert(result.message);
+      alert(result.balance);
+    },(result)=>{
+      alert(result.error.message);
+    }
+    )
   }
   else{
     alert("invalid form");

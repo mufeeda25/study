@@ -36,17 +36,19 @@ return (this.registerForm.get(field).touched||this.registerForm.get(field).dirty
     
     
   if(this.registerForm.valid){
-  const result= this.dataService.register(this.registerForm.value.name,this.registerForm.value.acno,this.registerForm.value.pin,this.registerForm.value.pwd);
-  if(result){
+  this.dataService.register(this.registerForm.value.name,this.registerForm.value.acno,this.registerForm.value.pin,this.registerForm.value.pwd)
+  .subscribe(data=>{
+    if(data){
     alert("successfully created account,please login");
     this.router.navigateByUrl("");
-  }
     }
-else{
+  },(data)=>{
+    alert(data.error.message)
+  
+  })
+}else{
   alert("form is invalid");
-  return;
 }
-    
+  }
+}
    
-}
-}

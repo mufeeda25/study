@@ -1,0 +1,5 @@
+<div *ngIf="id" class="confirmation-container">
+<p class="delete">are you  sure you want to delete with {{id}}?</p>
+<button class="btn btn-primary" (click)="delete()">delete</button>
+<button class="btn btn-primary" (click)="cancel()">cancel</button>
+</div>

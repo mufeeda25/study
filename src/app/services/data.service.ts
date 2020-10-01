@@ -1,5 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
+const options={
+  withCredentials:true
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -13,7 +16,7 @@ export class DataService {
       1005:{name:"user5", acno:1005, pin:5678, password:'userfive', balance:5000,transactions:[]},
   };
 currentUser;
-  constructor() {this.getDetails(); }
+  constructor(private http:HttpClient) {this.getDetails(); }
   saveDetails(){
     localStorage.setItem("accountDetails",JSON.stringify(this.accountDetails));
     if(this.currentUser){
@@ -21,7 +24,12 @@ currentUser;
     }
   }
   getTransactions(){
-    return this.accountDetails[this.currentUser.acno].transactions;
+    //return this.accountDetails[this.currentUser.acno].transactions;
+    return this.http.get("http://localhost:3000/Transactions",options);
+  }
+  deleteTransaction(id){
+    return this.http.delete("http://localhost:3000/Transactions/"+id,options)
+    
   }
    getDetails(){
     if(localStorage.getItem("accountDetails")){
@@ -35,11 +43,8 @@ currentUser;
   
   
   register(name,acno,pin,password){
-    if(acno in this.accountDetails){
-      alert("already existing,please login");
-      return false;
-    }
-this.accountDetails[acno]={
+    
+const data={
   name,
   acno,
   pin,
@@ -47,85 +52,99 @@ this.accountDetails[acno]={
   balance:0,
   transactions:[]
 }
-this.saveDetails();
-return true;
+return this.http.post("http://localhost:3000/register",data);
+
   }
   login(acno1,password){
-    var data=this.accountDetails;
+    
         var acno=parseInt(acno1);
         
-    if (acno in data){
-        var pwd = data[acno].password
-        if (pwd==password){
-          this.currentUser=data[acno];
-          this.saveDetails();
-          return true;
+    const data={
+      acno1:acno,
+      password
+    }
+    return this.http.post("http://localhost:3000/login",data,options);
   }
-}
-  }
+
+
   deposit(acno1,pin,amt){
+    const data={
+      acno1,
+      pin,
+      amt
+    }
+return this.http.post("http://localhost:3000/deposit",data,options);
+    }
     
-      var data=this.accountDetails;
+      
         
-        if (acno1 in data){
-            var mpin = data[acno1].pin
-            if (pin==mpin){
-                data[acno1].balance+= parseInt(amt);
-                data[acno1].transactions.push({
-                  amount:amt,
-                  type:'credit'
-                })
-                this.saveDetails();
-                return{
-                  status:true,
-                message:("account has been credited"),
-                balance:(data[acno1].balance),
+  //       if (acno1 in data){
+  //           var mpin = data[acno1].pin
+  //           if (pin==mpin){
+  //               data[acno1].balance+= parseInt(amt);
+  //               data[acno1].transactions.push({
+  //                 amount:amt,
+  //                 type:'credit'
+  //               })
+  //               this.saveDetails();
+  //               return{
+  //                 status:true,
+  //               message:("account has been credited"),
+  //               balance:(data[acno1].balance),
                 
                 
-            }
-          }
-        }
-        else{
-            return{
-              status:false,
-              message:'incorrect accout number'
-            }
-        }        
+  //           }
+  //         }
+  //       }
+  //       else{
+  //           return{
+  //             status:false,
+  //             message:'incorrect accout number'
+  //           }
+  //       }        
 
-  }
+  // }
   withdraw(acno1,pin,amt){
-    var data=this.accountDetails;
-    if(acno1 in data){
-    if(data[acno1].balance<parseInt(amt)){
-      return{
-        status:false,
-        message:'insufficient balance'
-      }
+
+    const data={
+      acno1,
+      pin,
+      amt
     }
-      else if(data[acno1].pin==pin){
-        data[acno1].balance-=parseInt(amt);
-        data[acno1].transactions.push({
-          amount:amt,
-          type:'debit'
-        })
-        this.saveDetails();
-        return{
-          status:true,
-          message:'the amount has been debited',
-          balance:data[acno1].balance
-        }
-      }
+return this.http.post("http://localhost:3000/withdraw",data,options);
     }
-    else{
-      return{
-        status:false,
-        message:'incorrect account number'
-      }
-    }
+  //   var data=this.accountDetails;
+  //   if(acno1 in data){
+  //   if(data[acno1].balance<parseInt(amt)){
+  //     return{
+  //       status:false,
+  //       message:'insufficient balance'
+  //     }
+  //   }
+  //     else if(data[acno1].pin==pin){
+  //       data[acno1].balance-=parseInt(amt);
+  //       data[acno1].transactions.push({
+  //         amount:amt,
+  //         type:'debit'
+  //       })
+  //       this.saveDetails();
+  //       return{
+  //         status:true,
+  //         message:'the amount has been debited',
+  //         balance:data[acno1].balance
+  //       }
+  //     }
+  //   }
+  //   else{
+  //     return{
+  //       status:false,
+  //       message:'incorrect account number'
+  //     }
+  //   }
         
 
         
-      }
+  //     }
     
   }
   
